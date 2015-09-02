@@ -362,11 +362,7 @@ namespace Microsoft.AspNet.Mvc.Actions
             var binder = new Mock<IModelBinder>();
             binder
                 .Setup(b => b.BindModelAsync(It.IsAny<ModelBindingContext>()))
-                .Returns(Task.FromResult(new ModelBindingResult(
-                    key: string.Empty,
-                    model: null,
-                    isModelSet: isModelSet,
-                    validationNode: null)));
+                .Returns(ModelBindingResult.SuccessAsync(string.Empty, model: null, validationNode: null));
 
             var actionBindingContext = new ActionBindingContext()
             {
@@ -546,12 +542,14 @@ namespace Microsoft.AspNet.Mvc.Actions
                 .Returns<ModelBindingContext>(bindingContext =>
                 {
                     object model;
-                    var isModelSet = inputPropertyValues.TryGetValue(bindingContext.ModelName, out model);
-                    return Task.FromResult(new ModelBindingResult(
-                        bindingContext.ModelName,
-                        model,
-                        isModelSet,
-                        validationNode: null));
+                    if (inputPropertyValues.TryGetValue(bindingContext.ModelName, out model))
+                    {
+                        return ModelBindingResult.SuccessAsync(bindingContext.ModelName, model, validationNode: null);
+                    }
+                    else
+                    {
+                        return ModelBindingResult.FailedAsync(bindingContext.ModelName);
+                    }
                 });
             var actionBindingContext = new ActionBindingContext
             {

@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.Framework.Internal;
 
 namespace Microsoft.AspNet.Mvc.ModelBinding
 {
@@ -16,27 +17,42 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
 
         public static readonly Task<ModelBindingResult> NoResultAsync = Task.FromResult(NoResult);
 
-        public static ModelBindingResult Failed(string key)
+        public static ModelBindingResult Failed([NotNull] string key)
         {
             return new ModelBindingResult(key, model: null, isModelSet: false, validationNode: null);
         }
 
-        public static Task<ModelBindingResult> FailedAsync(string key)
+        public static Task<ModelBindingResult> FailedAsync([NotNull] string key)
         {
             return Task.FromResult(Failed(key));
         }
 
-        public static ModelBindingResult Success(string key, object model, ModelValidationNode validationNode)
+        public static ModelBindingResult Success(
+            [NotNull] string key,
+            object model,
+            ModelValidationNode validationNode)
         {
             return new ModelBindingResult(key, model, isModelSet: true, validationNode: validationNode);
         }
 
-        public static Task<ModelBindingResult> SuccessAsync(string key, object model, ModelValidationNode validationNode)
+        public static Task<ModelBindingResult> SuccessAsync(
+            [NotNull] string key,
+            object model,
+            ModelValidationNode validationNode)
         {
             return Task.FromResult(Success(key, model, validationNode));
         }
 
-        public ModelBindingResult(string key, object model, bool isModelSet, ModelValidationNode validationNode)
+        public ModelBindingResult([NotNull] string key, ModelBindingResult other)
+        {
+            Key = key;
+
+            Model = other.Model;
+            IsModelSet = other.IsModelSet;
+            ValidationNode = other.ValidationNode;
+        }
+
+        private ModelBindingResult(string key, object model, bool isModelSet, ModelValidationNode validationNode)
         {
             Key = key;
             Model = model;

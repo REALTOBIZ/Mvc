@@ -413,18 +413,21 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                 .Returns((ModelBindingContext mbc) =>
                 {
                     var value = mbc.ValueProvider.GetValue(mbc.ModelName);
-                    if (value != ValueProviderResult.None)
+                    if (value == ValueProviderResult.None)
                     {
-                        var model = value.ConvertTo(mbc.ModelType);
-                        var modelValidationNode = new ModelValidationNode(mbc.ModelName, mbc.ModelMetadata, model);
-                        return Task.FromResult(new ModelBindingResult(
-                            mbc.ModelName,
-                            model, 
-                            model != null, 
-                            modelValidationNode));
+                        return ModelBindingResult.NoResultAsync;
                     }
 
-                    return ModelBindingResult.NoResultAsync;
+                    var model = value.ConvertTo(mbc.ModelType);
+                    if (model == null)
+                    {
+                        return ModelBindingResult.FailedAsync(mbc.ModelName);
+                    }
+                    else
+                    {
+                        var validationNode = new ModelValidationNode(mbc.ModelName, mbc.ModelMetadata, model);
+                        return ModelBindingResult.SuccessAsync(mbc.ModelName, model, validationNode);
+                    }
                 });
             return mockIntBinder.Object;
         }

@@ -38,11 +38,14 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
                 // This binder does not support the requested type.
                 return ModelBindingResult.NoResult;
             }
-
-            ModelValidationNode validationNode = null;
-            if (value != null)
+            
+            if (value == null)
             {
-                validationNode =
+                return ModelBindingResult.Failed(bindingContext.ModelName);
+            }
+            else
+            { 
+                var validationNode =
                     new ModelValidationNode(bindingContext.ModelName, bindingContext.ModelMetadata, value)
                     {
                         SuppressValidation = true,
@@ -52,13 +55,9 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
                     bindingContext.ModelName,
                     rawValue: null,
                     attemptedValue: null);
-            }
 
-            return new ModelBindingResult(
-                bindingContext.ModelName,
-                value,
-                isModelSet: value != null,
-                validationNode: validationNode);
+                return ModelBindingResult.Success(bindingContext.ModelName, value, validationNode);
+            }
         }
 
         private async Task<List<IFormFile>> GetFormFilesAsync(ModelBindingContext bindingContext)

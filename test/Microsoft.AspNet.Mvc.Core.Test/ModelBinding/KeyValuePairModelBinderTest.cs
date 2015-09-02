@@ -117,14 +117,22 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
         [Theory]
         [InlineData(null, false)]
         [InlineData(null, true)]
-        [InlineData(42, false)]
         [InlineData(42, true)]
-        public async Task TryBindStrongModel_InnerBinderReturnsNotNull_ReturnsInnerBinderResult(
+        public async Task TryBindStrongModel_InnerBinderReturnsAResult_ReturnsInnerBinderResult(
             object model,
-            bool isModelSet)
+            bool isSuccess)
         {
             // Arrange
-            var innerResult = new ModelBindingResult(string.Empty, model, isModelSet, validationNode: null);
+            ModelBindingResult innerResult;
+            if (isSuccess)
+            {
+                innerResult = ModelBindingResult.Success(string.Empty, model, validationNode: null);
+            }
+            else
+            {
+                innerResult = ModelBindingResult.Failed(string.Empty);
+            }
+            
             var innerBinder = new Mock<IModelBinder>();
             innerBinder
                 .Setup(o => o.BindModelAsync(It.IsAny<ModelBindingContext>()))

@@ -1322,12 +1322,8 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             var modelExplorer = metadataProvider.GetModelExplorerForType(typeof(Person), model);
             var propertyMetadata = bindingContext.ModelMetadata.Properties[nameof(model.PropertyWithInitializedValue)];
 
-            // This value won't be used because IsModelBound = false.
-            var result = new ModelBindingResult(
-                key: "foo",
-                model: "bad-value",
-                isModelSet: false,
-                validationNode: null);
+            // The null model value won't be used because IsModelBound = false.
+            var result = ModelBindingResult.Failed("foo");
 
             var testableBinder = new TestableMutableObjectModelBinder();
 
@@ -1352,12 +1348,8 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             var propertyMetadata =
                 bindingContext.ModelMetadata.Properties[nameof(model.PropertyWithInitializedValueAndDefault)];
 
-            // This value won't be used because IsModelBound = false.
-            var result = new ModelBindingResult(
-                key: "foo",
-                model: "bad-value",
-                isModelSet: false,
-                validationNode: null);
+            // The null model value won't be used because IsModelBound = false.
+            var result = ModelBindingResult.Failed("foo");
 
             var testableBinder = new TestableMutableObjectModelBinder();
 

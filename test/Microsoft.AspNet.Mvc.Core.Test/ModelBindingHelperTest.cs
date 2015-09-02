@@ -27,7 +27,6 @@ namespace Microsoft.AspNet.Mvc.Test
                 {
                     ModelBindingResult.NoResult,
                     ModelBindingResult.Failed("someKey"),
-                    new ModelBindingResult(model: null, key: "someKey", isModelSet: false, validationNode: null),
                 };
             }
         }

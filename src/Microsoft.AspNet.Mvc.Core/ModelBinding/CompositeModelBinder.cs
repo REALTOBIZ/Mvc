@@ -76,11 +76,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
                 }
             }
 
-            return new ModelBindingResult(
-                bindingKey,
-                modelBindingResult.Model,
-                modelBindingResult.IsModelSet,
-                modelBindingResult.ValidationNode);
+            return new ModelBindingResult(bindingKey, modelBindingResult);
         }
 
         private async Task<ModelBindingResult> RunModelBinders(ModelBindingContext bindingContext)
