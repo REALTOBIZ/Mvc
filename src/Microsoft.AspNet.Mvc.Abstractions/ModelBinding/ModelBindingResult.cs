@@ -146,27 +146,18 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         /// <inheritdoc />
         public override int GetHashCode()
         {
-            if (Key == null)
-            {
-                return 0;
-            }
-            else if (IsModelSet)
-            {
-                Debug.Assert(Key != null);
-                return Key.GetHashCode() * Model?.GetHashCode() ?? 17;
-            }
-            else
-            {
-                Debug.Assert(Key != null);
-                return Key.GetHashCode();
-            }
+            var hash = HashCodeCombiner.Start();
+            hash.Add(Key, StringComparer.OrdinalIgnoreCase);
+            hash.Add(IsModelSet);
+            hash.Add(Model);
+            return hash.CombinedHash;
         }
 
         /// <inheritdoc />
         public bool Equals(ModelBindingResult other)
         {
             return
-                string.Equals(Key, other.Key, StringComparison.Ordinal) &&
+                string.Equals(Key, other.Key, StringComparison.OrdinalIgnoreCase) &&
                 IsModelSet == other.IsModelSet &&
                 object.Equals(Model, other.Model);
         }

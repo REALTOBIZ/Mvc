@@ -42,7 +42,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
         [InlineData(typeof(DateTimeOffset))]
         [InlineData(typeof(double))]
         [InlineData(typeof(DayOfWeek))]
-        public async Task BindModel_ReturnsFailure_IfTypeCanBeConverted(Type destinationType)
+        public async Task BindModel_ReturnsFailure_IfTypeCanBeConverted_AndConversionFails(Type destinationType)
         {
             if (TestPlatformHelper.IsMono &&
                 destinationType == typeof(DateTimeOffset))
@@ -174,7 +174,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
             var result = await binder.BindModelAsync(bindingContext);
 
             // Assert
-            Assert.NotNull(result);
+            Assert.Equal(ModelBindingResult.NoResult, result);
             Assert.Equal(42, result.Model);
             Assert.True(bindingContext.ModelState.ContainsKey("theModelName"));
         }

@@ -420,22 +420,22 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             // exceptions as necessary.
             foreach (var entry in results)
             {
-                var result = entry.Value;
-                if (result.IsModelSet)
+                if (entry.Value != ModelBindingResult.NoResult)
                 {
+                    var result = entry.Value;
                     var propertyMetadata = entry.Key;
                     SetProperty(bindingContext, modelExplorer, propertyMetadata, result);
-                }
 
-                var propertyValidationNode = result.ValidationNode;
-                if (propertyValidationNode == null)
-                {
-                    // Make sure that irrespective of whether the properties of the model were bound with a value,
-                    // create a validation node so that these get validated.
-                    propertyValidationNode = new ModelValidationNode(result.Key, entry.Key, result.Model);
-                }
+                    var propertyValidationNode = result.ValidationNode;
+                    if (propertyValidationNode == null)
+                    {
+                        // Make sure that irrespective of whether the properties of the model were bound with a value,
+                        // create a validation node so that these get validated.
+                        propertyValidationNode = new ModelValidationNode(result.Key, entry.Key, result.Model);
+                    }
 
-                validationNode.ChildNodes.Add(propertyValidationNode);
+                    validationNode.ChildNodes.Add(propertyValidationNode);
+                }
             }
 
             return validationNode;
