@@ -416,20 +416,7 @@ namespace System.Web.Http
         /// </param>
         public void Validate<TEntity>(TEntity entity, string keyPrefix)
         {
-            var modelExplorer = MetadataProvider.GetModelExplorerForType(typeof(TEntity), entity);
-
-            var modelValidationContext = new ModelValidationContext(
-                bindingSource: null,
-                validatorProvider: BindingContext.ValidatorProvider,
-                modelState: ModelState,
-                modelExplorer: modelExplorer);
-
-            ObjectValidator.Validate(
-                modelValidationContext,
-                new ModelValidationNode(keyPrefix, modelExplorer.Metadata, entity)
-                {
-                    ValidateAllProperties = true
-                });
+            throw null;
         }
 
         protected virtual void Dispose(bool disposing)

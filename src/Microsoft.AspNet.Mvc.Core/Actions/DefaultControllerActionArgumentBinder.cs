@@ -84,17 +84,11 @@ namespace Microsoft.AspNet.Mvc.Actions
             if (modelBindingResult.IsModelSet &&
                 modelBindingResult.ValidationNode != null)
             {
-                var modelExplorer = new ModelExplorer(
-                    _modelMetadataProvider,
-                    metadata,
-                    modelBindingResult.Model);
-                var validationContext = new ModelValidationContext(
-                    modelBindingContext.BindingSource,
+                _validator.Validate(
                     operationContext.ValidatorProvider,
                     modelState,
-                    modelExplorer);
-
-                _validator.Validate(validationContext, modelBindingResult.ValidationNode);
+                    modelBindingContext.ValidationState,
+                    modelBindingResult.Model);
             }
 
             return modelBindingResult;

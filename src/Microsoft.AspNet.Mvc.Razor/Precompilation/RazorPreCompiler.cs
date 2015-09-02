@@ -170,8 +170,9 @@ namespace Microsoft.AspNet.Mvc.Razor.Precompilation
             }
             else
             {
-                var assemblyResource = new ResourceDescriptor()
+                var assemblyResource = new ResourceDescription()
                 {
+                    
                     FileName = Path.GetFileName(assemblyResourceName),
                     Name = assemblyResourceName,
                     StreamFactory = () => GetNonDisposableStream(assemblyStream)

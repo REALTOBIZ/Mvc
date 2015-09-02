@@ -158,6 +158,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
                 BindingSource = oldBindingContext.BindingSource,
                 BinderType = oldBindingContext.BinderType,
                 IsTopLevelObject = oldBindingContext.IsTopLevelObject,
+                ValidationState = oldBindingContext.ValidationState,
             };
 
             if (bindingSource != null && bindingSource.IsGreedy)

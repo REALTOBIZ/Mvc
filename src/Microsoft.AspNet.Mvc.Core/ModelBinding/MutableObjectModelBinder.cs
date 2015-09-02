@@ -572,30 +572,6 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             }
         }
 
-        // Returns true if validator execution adds a model error.
-        private static bool RunValidator(
-            IModelValidator validator,
-            ModelBindingContext bindingContext,
-            ModelExplorer propertyExplorer,
-            string modelStateKey)
-        {
-            var validationContext = new ModelValidationContext(bindingContext, propertyExplorer);
-
-            var addedError = false;
-            foreach (var validationResult in validator.Validate(validationContext))
-            {
-                bindingContext.ModelState.TryAddModelError(modelStateKey, validationResult.Message);
-                addedError = true;
-            }
-
-            if (!addedError)
-            {
-                bindingContext.ModelState.MarkFieldValid(modelStateKey);
-            }
-
-            return addedError;
-        }
-
         internal sealed class PropertyValidationInfo
         {
             public PropertyValidationInfo()

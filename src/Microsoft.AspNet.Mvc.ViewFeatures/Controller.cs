@@ -1443,19 +1443,7 @@ namespace Microsoft.AspNet.Mvc
                 MetadataProvider,
                 modelName);
 
-            var validationContext = new ModelValidationContext(
-                bindingSource: null,
-                validatorProvider: BindingContext.ValidatorProvider,
-                modelState: ModelState,
-                modelExplorer: modelExplorer);
-
-            ObjectValidator.Validate(
-                validationContext,
-                new ModelValidationNode(modelName, modelExplorer.Metadata, model)
-                {
-                    ValidateAllProperties = true
-                });
-            return ModelState.IsValid;
+            throw null;
         }
 
         /// <inheritdoc />

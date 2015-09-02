@@ -7,58 +7,10 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Validation
 {
     public class ModelValidationContext
     {
-        public ModelValidationContext(
-            [NotNull] ModelBindingContext bindingContext,
-            [NotNull] ModelExplorer modelExplorer)
-            : this(
-                  bindingContext.BindingSource,
-                  bindingContext.OperationBindingContext.ValidatorProvider,
-                  bindingContext.ModelState,
-                  modelExplorer)
-        {
-        }
+        public object Model { get; set; }
 
-        public ModelValidationContext(
-            BindingSource bindingSource,
-            [NotNull] IModelValidatorProvider validatorProvider,
-            [NotNull] ModelStateDictionary modelState,
-            [NotNull] ModelExplorer modelExplorer)
-        {
-            ModelState = modelState;
-            ValidatorProvider = validatorProvider;
-            ModelExplorer = modelExplorer;
-            BindingSource = bindingSource;
-        }
+        public object Container { get; set; }
 
-        /// <summary>
-        /// Constructs a new instance of the <see cref="ModelValidationContext"/> class using the
-        /// <paramref name="parentContext" /> and <paramref name="modelExplorer"/>.
-        /// </summary>
-        /// <param name="parentContext">Existing <see cref="ModelValidationContext"/>.</param>
-        /// <param name="modelExplorer">
-        /// <see cref="ModelExplorer"/> associated with the new <see cref="ModelValidationContext"/>.
-        /// </param>
-        /// <returns>
-        /// A new instance of the <see cref="ModelValidationContext"/> class using the
-        /// <paramref name="parentContext" /> and <paramref name="modelExplorer"/>.
-        /// </returns>
-        public static ModelValidationContext GetChildValidationContext(
-            [NotNull] ModelValidationContext parentContext,
-            [NotNull] ModelExplorer modelExplorer)
-        {
-            return new ModelValidationContext(
-                modelExplorer.Metadata.BindingSource,
-                parentContext.ValidatorProvider,
-                parentContext.ModelState,
-                modelExplorer);
-        }
-
-        public ModelExplorer ModelExplorer { get; }
-
-        public ModelStateDictionary ModelState { get; }
-
-        public BindingSource BindingSource { get; set; }
-
-        public IModelValidatorProvider ValidatorProvider { get; }
+        public ModelMetadata Metadata { get; set; }
     }
 }

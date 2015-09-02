@@ -8,13 +8,10 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Validation
     /// </summary>
     public interface IObjectModelValidator
     {
-        /// <summary>
-        /// Validates the given model in <see cref="ModelValidationContext.ModelExplorer"/>.
-        /// </summary>
-        /// <param name="validationContext">The <see cref="ModelValidationContext"/> associated with the current call.
-        /// </param>
-        /// <param name="validationNode">The <see cref="ModelValidationNode"/> for the model which gets validated.
-        /// </param>
-        void Validate(ModelValidationContext validationContext, ModelValidationNode validationNode);
+        void Validate(
+            IModelValidatorProvider validatorProvider,
+            ModelStateDictionary modelState,
+            ValidationStateDictionary validationState,
+            object model);
     }
 }
