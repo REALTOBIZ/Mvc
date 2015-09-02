@@ -173,7 +173,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                     if (value != ValueProviderResult.None)
                     {
                         var model = value.ConvertTo(mbc.ModelType);
-                        return ModelBindingResult.SuccessAsync(mbc.ModelName, model);
+                        return ModelBindingResult.SuccessAsync(mbc.ModelName, model, validationNode: null);
                     }
                     return ModelBindingResult.NoResultAsync;
                 });

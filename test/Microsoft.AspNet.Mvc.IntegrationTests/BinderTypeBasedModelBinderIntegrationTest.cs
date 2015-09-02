@@ -331,7 +331,7 @@ namespace Microsoft.AspNet.Mvc.IntegrationTests
         {
             public Task<ModelBindingResult> BindModelAsync(ModelBindingContext bindingContext)
             {
-                return ModelBindingResult.SuccessAsync(bindingContext.ModelName, model: null);
+                return ModelBindingResult.SuccessAsync(bindingContext.ModelName, model: null, validationNode: null);
             }
         }
 

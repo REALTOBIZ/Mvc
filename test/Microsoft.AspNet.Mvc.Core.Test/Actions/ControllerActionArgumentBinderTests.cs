@@ -114,7 +114,7 @@ namespace Microsoft.AspNet.Mvc.Actions
                 {
                     context.ModelMetadata = metadataProvider.GetMetadataForType(typeof(string));
                 })
-                .Returns(ModelBindingResult.SuccessAsync(string.Empty, value));
+                .Returns(ModelBindingResult.SuccessAsync(string.Empty, value, validationNode: null));
 
             var actionContext = new ActionContext(
                 new DefaultHttpContext(),
@@ -404,7 +404,7 @@ namespace Microsoft.AspNet.Mvc.Actions
             var binder = new Mock<IModelBinder>();
             binder
                 .Setup(b => b.BindModelAsync(It.IsAny<ModelBindingContext>()))
-                .Returns(ModelBindingResult.SuccessAsync(key: string.Empty, model: null));
+                .Returns(ModelBindingResult.SuccessAsync(key: string.Empty, model: null, validationNode: null));
 
             var actionBindingContext = new ActionBindingContext()
             {

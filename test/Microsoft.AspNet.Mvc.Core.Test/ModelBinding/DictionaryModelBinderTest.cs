@@ -462,7 +462,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                     KeyValuePair<int, string> value;
                     if (values.TryGetValue(mbc.ModelName, out value))
                     {
-                        return ModelBindingResult.SuccessAsync(mbc.ModelName, value);
+                        return ModelBindingResult.SuccessAsync(mbc.ModelName, value, validationNode: null);
                     }
                     else
                     {

@@ -40,7 +40,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                         Assert.Equal("someName", context.ModelName);
                         Assert.Same(bindingContext.ValueProvider, context.ValueProvider);
 
-                        return ModelBindingResult.SuccessAsync("someName", 42);
+                        return ModelBindingResult.SuccessAsync("someName", 42, validationNode: null);
                     });
             var shimBinder = CreateCompositeBinder(mockIntBinder.Object);
 
@@ -88,7 +88,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                         Assert.Equal("", mbc.ModelName);
                         Assert.Same(bindingContext.ValueProvider, mbc.ValueProvider);
 
-                        return ModelBindingResult.SuccessAsync(string.Empty, expectedModel);
+                        return ModelBindingResult.SuccessAsync(string.Empty, expectedModel, validationNode: null);
                     });
 
             var shimBinder = CreateCompositeBinder(mockIntBinder.Object);
@@ -223,7 +223,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
             var modelBinder = new Mock<IModelBinder>();
             modelBinder
                 .Setup(mb => mb.BindModelAsync(It.IsAny<ModelBindingContext>()))
-                .Returns(ModelBindingResult.SuccessAsync("someName", model: null));
+                .Returns(ModelBindingResult.SuccessAsync("someName", model: null, validationNode: null));
 
             var composite = CreateCompositeBinder(modelBinder.Object);
 

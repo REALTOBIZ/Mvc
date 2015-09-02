@@ -26,16 +26,6 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             return Task.FromResult(Failed(key));
         }
 
-        public static ModelBindingResult Success(string key, object model)
-        {
-            return Success(key, model, validationNode: null);
-        }
-
-        public static Task<ModelBindingResult> SuccessAsync(string key, object model)
-        {
-            return Task.FromResult(Success(key, model, validationNode: null));
-        }
-
         public static ModelBindingResult Success(string key, object model, ModelValidationNode validationNode)
         {
             return new ModelBindingResult(key, model, isModelSet: true, validationNode: validationNode);
