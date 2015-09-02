@@ -39,7 +39,6 @@ namespace Microsoft.AspNet.Mvc.IntegrationTests
             // Assert
 
             // ModelBindingResult
-            Assert.NotNull(modelBindingResult);
             Assert.True(modelBindingResult.IsModelSet);
             Assert.Null(modelBindingResult.Model);
 
@@ -180,7 +179,6 @@ namespace Microsoft.AspNet.Mvc.IntegrationTests
             // Assert
 
             // ModelBindingResult
-            Assert.NotNull(modelBindingResult);
             Assert.Equal("Success", modelBindingResult.Model);
             Assert.Equal("CustomParameter", modelBindingResult.Key);
 
@@ -224,7 +222,7 @@ namespace Microsoft.AspNet.Mvc.IntegrationTests
             // Assert
 
             // ModelBindingResult
-            Assert.NotNull(modelBindingResult);
+            Assert.True(modelBindingResult.IsModelSet);
             Assert.Equal(string.Empty, modelBindingResult.Key);
 
             // Model
@@ -265,7 +263,6 @@ namespace Microsoft.AspNet.Mvc.IntegrationTests
             // Assert
 
             // ModelBindingResult
-            Assert.NotNull(modelBindingResult);
             Assert.Equal("CustomParameter", modelBindingResult.Key);
 
             // Model
