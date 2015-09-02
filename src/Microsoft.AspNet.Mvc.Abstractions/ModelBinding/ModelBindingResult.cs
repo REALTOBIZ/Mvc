@@ -13,20 +13,45 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
     /// </summary>
     public struct ModelBindingResult : IEquatable<ModelBindingResult>
     {
+        /// <summary>
+        /// A <see cref="ModelBinding"/> representing the lack of a result. The model binding
+        /// system will continue to execute other model binders.
+        /// </summary>
         public static readonly ModelBindingResult NoResult = new ModelBindingResult();
 
+        /// <summary>
+        /// Returns a completed <see cref="Task{ModelBindingResult}"/> representing the lack of a result. The model
+        /// binding system will continue to execute other model binders.
+        /// </summary>
         public static readonly Task<ModelBindingResult> NoResultAsync = Task.FromResult(NoResult);
 
+        /// <summary>
+        /// Creates a <see cref="ModelBindingResult"/> representing a failed model binding operation.
+        /// </summary>
+        /// <param name="key">The key of the current model binding operation.</param>
+        /// <returns>A <see cref="ModelBindingResult"/> representing a failed model binding operation.</returns>
         public static ModelBindingResult Failed([NotNull] string key)
         {
             return new ModelBindingResult(key, model: null, isModelSet: false, validationNode: null);
         }
 
+        /// <summary>
+        /// Creates a completed <see cref="Task{ModelBindingResult}"/> representing a failed model binding operation.
+        /// </summary>
+        /// <param name="key">The key of the current model binding operation.</param>
+        /// <returns>A completed <see cref="Task{ModelBindingResult}"/> representing a failed model binding operation.</returns>
         public static Task<ModelBindingResult> FailedAsync([NotNull] string key)
         {
             return Task.FromResult(Failed(key));
         }
 
+        /// <summary>
+        /// Creates a <see cref="ModelBindingResult"/> representing a successful model binding operation.
+        /// </summary>
+        /// <param name="key">The key of the current model binding operation.</param>
+        /// <param name="model">The model value. May be <c>null.</c></param>
+        /// <param name="validationNode">The <see cref="ModelValidationNode"/>. May be <c>null</c>.</param>
+        /// <returns>A <see cref="ModelBindingResult"/> representing a successful model bind.</returns>
         public static ModelBindingResult Success(
             [NotNull] string key,
             object model,
@@ -35,6 +60,14 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             return new ModelBindingResult(key, model, isModelSet: true, validationNode: validationNode);
         }
 
+        /// <summary>
+        /// Creates a completed <see cref="Task{ModelBindingResult}"/> representing a successful model binding
+        /// operation.
+        /// </summary>
+        /// <param name="key">The key of the current model binding operation.</param>
+        /// <param name="model">The model value. May be <c>null.</c></param>
+        /// <param name="validationNode">The <see cref="ModelValidationNode"/>. May be <c>null</c>.</param>
+        /// <returns>A completed <see cref="Task{ModelBindingResult}"/> representing a successful model bind.</returns>
         public static Task<ModelBindingResult> SuccessAsync(
             [NotNull] string key,
             object model,
@@ -43,6 +76,11 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             return Task.FromResult(Success(key, model, validationNode));
         }
 
+        /// <summary>
+        /// Creates a new <see cref="ModelBindingResult"/> using the provided <paramref cref="key"/>
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="other"></param>
         public ModelBindingResult([NotNull] string key, ModelBindingResult other)
         {
             Key = key;
@@ -91,6 +129,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         /// </summary>
         public ModelValidationNode ValidationNode { get; }
 
+        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             var other = obj as ModelBindingResult?;
@@ -104,6 +143,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             }
         }
 
+        /// <inheritdoc />
         public override int GetHashCode()
         {
             if (Key == null)
@@ -122,6 +162,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             }
         }
 
+        /// <inheritdoc />
         public bool Equals(ModelBindingResult other)
         {
             return
@@ -130,11 +171,23 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
                 object.Equals(Model, other.Model);
         }
 
+        /// <summary>
+        /// Compares <see cref="ModelBindingResult"/> objects for equality.
+        /// </summary>
+        /// <param name="x">A <see cref="ModelBindingResult"/>.</param>
+        /// <param name="y">A <see cref="ModelBindingResult"/>.</param>
+        /// <returns><c>true</c> if the objects are equal, otherwise <c>false</c>.</returns>
         public static bool operator ==(ModelBindingResult x, ModelBindingResult y)
         {
             return x.Equals(y);
         }
 
+        /// <summary>
+        /// Compares <see cref="ModelBindingResult"/> objects for inequality.
+        /// </summary>
+        /// <param name="x">A <see cref="ModelBindingResult"/>.</param>
+        /// <param name="y">A <see cref="ModelBindingResult"/>.</param>
+        /// <returns><c>true</c> if the objects are not equal, otherwise <c>false</c>.</returns>
         public static bool operator !=(ModelBindingResult x, ModelBindingResult y)
         {
             return !x.Equals(y);
