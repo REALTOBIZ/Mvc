@@ -14,6 +14,7 @@ using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Mvc.ViewComponents;
 using Microsoft.AspNet.Routing;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.Framework.MemoryPool;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Net.Http.Headers;
 using Moq;
@@ -320,7 +321,9 @@ namespace Microsoft.AspNet.Mvc.ActionResults
             services.AddSingleton<IViewComponentActivator, DefaultViewComponentActivator>();
             services.AddInstance<IViewComponentDescriptorProvider>(new FixedSetViewComponentDescriptorProvider(descriptors));
             services.AddSingleton<IModelMetadataProvider, EmptyModelMetadataProvider>();
-
+            services.AddSingleton<IArraySegmentPool<byte>, DefaultArraySegmentPool<byte>>();
+            services.AddSingleton<IArraySegmentPool<char>, DefaultArraySegmentPool<char>>();
+            services.AddSingleton<IArraySegmentPool<object>, DefaultArraySegmentPool<object>>();
             return services;
         }
 

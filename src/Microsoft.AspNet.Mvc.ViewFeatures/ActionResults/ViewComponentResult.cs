@@ -4,12 +4,12 @@
 using System;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc.Actions;
 using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Mvc.ViewFeatures;
 using Microsoft.AspNet.Mvc.ViewFeatures.Internal;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.Framework.MemoryPool;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Net.Http.Headers;
 
@@ -94,7 +94,13 @@ namespace Microsoft.AspNet.Mvc.ActionResults
 
             response.ContentType = contentType.ToString();
 
-            using (var writer = new HttpResponseStreamWriter(response.Body, contentType.Encoding))
+            var bytePool = services.GetRequiredService<IArraySegmentPool<byte>>();
+            var charPool = services.GetRequiredService<IArraySegmentPool<char>>();
+            using (var writer = new HttpResponseStreamWriter(
+                response.Body,
+                contentType.Encoding,
+                charPool.Lease(4096),
+                bytePool.Lease(4096)))
             {
                 var viewContext = new ViewContext(
                     context,

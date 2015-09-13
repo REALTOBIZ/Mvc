@@ -17,6 +17,7 @@ using Microsoft.AspNet.Mvc.Routing;
 using Microsoft.AspNet.Routing;
 using Microsoft.Framework.DependencyInjection.Extensions;
 using Microsoft.Framework.Internal;
+using Microsoft.Framework.MemoryPool;
 using Microsoft.Framework.OptionsModel;
 
 namespace Microsoft.Framework.DependencyInjection
@@ -128,6 +129,7 @@ namespace Microsoft.Framework.DependencyInjection
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.TryAddSingleton<IActionBindingContextAccessor, ActionBindingContextAccessor>();
             services.TryAddSingleton<IUrlHelper, UrlHelper>();
+            services.TryAdd(ServiceDescriptor.Describe(typeof(IArraySegmentPool<>), typeof(DefaultArraySegmentPool<>), ServiceLifetime.Singleton));
         }
 
         private static void ConfigureDefaultServices(IServiceCollection services)
