@@ -3,9 +3,10 @@
 
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc.Actions;
 using Microsoft.AspNet.Mvc.Rendering;
+using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Internal;
+using Microsoft.Framework.MemoryPool;
 using Microsoft.Net.Http.Headers;
 
 namespace Microsoft.AspNet.Mvc
@@ -46,7 +47,14 @@ namespace Microsoft.AspNet.Mvc
 
             response.ContentType = contentType?.ToString() ?? response.ContentType ?? DefaultContentType.ToString();
 
-            using (var writer = new HttpResponseStreamWriter(response.Body, contentType?.Encoding ?? DefaultContentType.Encoding))
+            var services = actionContext.HttpContext.RequestServices;
+            var bytePool = services.GetRequiredService<IArraySegmentPool<byte>>();
+            var charPool = services.GetRequiredService<IArraySegmentPool<char>>();
+            using (var writer = new HttpResponseStreamWriter(
+                response.Body,
+                contentType?.Encoding ?? DefaultContentType.Encoding,
+                charPool.Lease(4096),
+                bytePool.Lease(4096)))
             {
                 var viewContext = new ViewContext(
                     actionContext,

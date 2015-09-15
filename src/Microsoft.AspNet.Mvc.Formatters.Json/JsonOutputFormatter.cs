@@ -5,7 +5,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc.Internal;
+using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Internal;
+using Microsoft.Framework.MemoryPool;
 using Newtonsoft.Json;
 
 namespace Microsoft.AspNet.Mvc.Formatters
@@ -84,7 +86,14 @@ namespace Microsoft.AspNet.Mvc.Formatters
             var response = context.HttpContext.Response;
             var selectedEncoding = context.SelectedEncoding;
 
-            using (var writer = new HttpResponseStreamWriter(response.Body, selectedEncoding))
+            var services = context.HttpContext.RequestServices;
+            var bytePool = services.GetRequiredService<IArraySegmentPool<byte>>();
+            var charPool = services.GetRequiredService<IArraySegmentPool<char>>();
+            using (var writer = new HttpResponseStreamWriter(
+                response.Body,
+                selectedEncoding,
+                charPool.Lease(4096),
+                bytePool.Lease(4096)))
             {
                 WriteObject(writer, context.Object);
             }

@@ -12,6 +12,7 @@ using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Routing;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
+using Microsoft.Framework.MemoryPool;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Net.Http.Headers;
 using Moq;
@@ -193,7 +194,7 @@ namespace Microsoft.AspNet.Mvc.ActionResults
         }
 
         [Fact]
-        public async Task ExecuteResultAsync_UsesCompositeViewEngineFromServices_IfViewEngineIsNotSpecified()          
+        public async Task ExecuteResultAsync_UsesCompositeViewEngineFromServices_IfViewEngineIsNotSpecified()
         {
             // Arrange
             var viewName = "some-view-name";
@@ -225,6 +226,12 @@ namespace Microsoft.AspNet.Mvc.ActionResults
                         .Returns(new MvcViewOptions());
                     return optionsAccessor.Object;
                 });
+            serviceProvider
+                .Setup(s => s.GetService(typeof(IArraySegmentPool<byte>)))
+                .Returns(new DefaultArraySegmentPool<byte>());
+            serviceProvider
+                .Setup(s => s.GetService(typeof(IArraySegmentPool<char>)))
+                .Returns(new DefaultArraySegmentPool<char>());
             context.HttpContext.RequestServices = serviceProvider.Object;
 
             var viewResult = new ViewResult
@@ -326,6 +333,12 @@ namespace Microsoft.AspNet.Mvc.ActionResults
                 .Returns(telemetry);
             serviceProvider.Setup(s => s.GetService(typeof(TelemetrySource)))
                 .Returns(telemetry);
+            serviceProvider
+                .Setup(s => s.GetService(typeof(IArraySegmentPool<byte>)))
+                .Returns(new DefaultArraySegmentPool<byte>());
+            serviceProvider
+                .Setup(s => s.GetService(typeof(IArraySegmentPool<char>)))
+                .Returns(new DefaultArraySegmentPool<char>());
             var httpContext = new DefaultHttpContext();
             httpContext.RequestServices = serviceProvider.Object;
 

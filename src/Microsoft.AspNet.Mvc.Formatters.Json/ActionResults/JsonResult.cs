@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc.Actions;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Internal;
+using Microsoft.Framework.MemoryPool;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
@@ -98,7 +99,14 @@ namespace Microsoft.AspNet.Mvc.ActionResults
                     .SerializerSettings;
             }
 
-            using (var writer = new HttpResponseStreamWriter(response.Body, contentTypeHeader.Encoding))
+            var services = context.HttpContext.RequestServices;
+            var bytePool = services.GetRequiredService<IArraySegmentPool<byte>>();
+            var charPool = services.GetRequiredService<IArraySegmentPool<char>>();
+            using (var writer = new HttpResponseStreamWriter(
+                response.Body,
+                contentTypeHeader.Encoding,
+                charPool.Lease(4096),
+                bytePool.Lease(4096)))
             {
                 using (var jsonWriter = new JsonTextWriter(writer))
                 {
