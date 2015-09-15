@@ -26,7 +26,7 @@ namespace Microsoft.AspNet.Mvc.Localization.Test
             htmlLocalizer.Setup(h => h["Hello"]).Returns(localizedString);
 
             var htmlLocalizerFactory = new Mock<IHtmlLocalizerFactory>();
-            htmlLocalizerFactory.Setup(h => h.Create("TestApplication.example", "TestApplication"))
+            htmlLocalizerFactory.Setup(h => h.Create("example", "TestApplication"))
                 .Returns(htmlLocalizer.Object);
 
             var viewLocalizer = new ViewLocalizer(htmlLocalizerFactory.Object, applicationEnvironment.Object);
@@ -59,7 +59,7 @@ namespace Microsoft.AspNet.Mvc.Localization.Test
 
             var htmlLocalizerFactory = new Mock<IHtmlLocalizerFactory>();
             htmlLocalizerFactory.Setup(
-                h => h.Create("TestApplication.example", "TestApplication")).Returns(htmlLocalizer.Object);
+                h => h.Create("example", "TestApplication")).Returns(htmlLocalizer.Object);
 
             var viewLocalizer = new ViewLocalizer(htmlLocalizerFactory.Object, applicationEnvironment.Object);
 
