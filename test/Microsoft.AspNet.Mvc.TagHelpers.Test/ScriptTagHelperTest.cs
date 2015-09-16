@@ -16,7 +16,6 @@ using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Mvc.TagHelpers.Internal;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using Microsoft.AspNet.Routing;
-using Microsoft.AspNet.Testing.xunit;
 using Microsoft.Dnx.Runtime;
 using Microsoft.Framework.Caching;
 using Microsoft.Framework.Caching.Memory;
@@ -32,8 +31,8 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
         [Theory]
         [InlineData(null, "test.js", "test.js")]
         [InlineData("abcd.js", "test.js", "test.js")]
-        [InlineData(null, "~/test.js", "virtualRoot/test.js")]
-        [InlineData("abcd.js", "~/test.js", "virtualRoot/test.js")]
+        [InlineData(null, "~/test.js", "/virtualRoot/test.js")]
+        [InlineData("abcd.js", "~/test.js", "/virtualRoot/test.js")]
         public void Process_SrcDefaultsToTagHelperOutputSrcAttributeAddedByOtherTagHelper(
             string src,
             string srcOutput,
@@ -58,11 +57,9 @@ namespace Microsoft.AspNet.Mvc.TagHelpers
             var viewContext = MakeViewContext();
             var urlHelper = new Mock<IUrlHelper>();
 
-            // Ensure expanded path does not look like an absolute path on Linux, avoiding
-            // https://github.com/aspnet/External/issues/21
             urlHelper
                 .Setup(urlhelper => urlhelper.Content(It.IsAny<string>()))
-                .Returns(new Func<string, string>(url => url.Replace("~/", "virtualRoot/")));
+                .Returns(new Func<string, string>(url => url.Replace("~/", "/virtualRoot/")));
 
             var helper = new ScriptTagHelper(
                 logger.Object,

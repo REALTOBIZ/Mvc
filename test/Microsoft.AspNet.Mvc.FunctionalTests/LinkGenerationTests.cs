@@ -27,10 +27,33 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
 
         public HttpClient Client { get; }
 
+
+        public TheoryData<string, string> RelativeLinksData
+        {
+            get
+            {
+                var data = new TheoryData<string, string>
+                {
+                    { "http://localhost/Home/RedirectToActionReturningTaskAction", "/Home/ActionReturningTask" },
+                    { "http://localhost/Home/RedirectToRouteActionAsMethodAction", "/Home/ActionReturningTask" },
+                    { "http://localhost/Home/RedirectToRouteUsingRouteName", "/api/orders/10" },
+                };
+
+#if DNXCORE50
+                // With Core CLR on Linux, attempts to use a non-Latin1 hostname leads to a NotImplementedException.
+                // ??? Test on Mac then file bug.
+                if (TestPlatformHelper.IsWindows)
+#endif
+                {
+                    data.Add("http://pingüino/Home/RedirectToRouteUsingRouteName", "/api/orders/10");
+                }
+
+                return data;
+            }
+        }
+
         [Theory]
-        [InlineData("http://pingüino/Home/RedirectToActionReturningTaskAction", "/Home/ActionReturningTask")]
-        [InlineData("http://pingüino/Home/RedirectToRouteActionAsMethodAction", "/Home/ActionReturningTask")]
-        [InlineData("http://pingüino/Home/RedirectToRouteUsingRouteName", "/api/orders/10")]
+        [MemberData(nameof(RelativeLinksData))]
         public async Task GeneratedLinksWithActionResults_AreRelativeLinks_WhenSetOnLocationHeader(
             string url,
             string expected)
@@ -42,7 +65,7 @@ namespace Microsoft.AspNet.Mvc.FunctionalTests
 
             // Assert
             Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-            // Location.ToString() in mono returns file://url. (https://github.com/aspnet/External/issues/21)
+            // Location.ToString() in mono returns file://url. (see https://github.com/aspnet/External/issues/21)
             Assert.Equal(
                 TestPlatformHelper.IsMono ? new Uri(expected) : new Uri(expected, UriKind.Relative),
                 response.Headers.Location);
